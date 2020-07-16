@@ -9,28 +9,25 @@ let TodoDB = Stack();
 renderData( TodoDB.getData() )
 
 function Stack () {
-    const key = 'todos_db';
     let data = [];
-    let count = 0;
+    let count = 0; // total amount
+    const key = 'todos_db';
 
     push = (item) => {
+        /* add the following item */
         data[count++] = item;
         setData()
     };
 
     pop = () => {
-        if (count === 0) return undefined;
+        /* remove from the bottom */
+        if (count <= 0) return undefined;
         const delItem = data[count - 1];
         delete data[--count];
         // data[--count] = null;
-        // setData()
-        return delItem;
+        setData()
+        return [count,delItem];
     };
-
-    swap = (_i,_l) => {
-        const i = _i, l = _l;
-        [arr[i], arr[l]] = [arr[l], arr[i]];
-    }
 
     print = () => {
         let num = count - 1;
@@ -39,6 +36,10 @@ function Stack () {
             num--;
         }
     };
+
+    swap = (i,x) => {
+        [arr[i], arr[x]] = [arr[x], arr[i]];
+    }
 
     size = () => count;
     
@@ -52,6 +53,7 @@ function Stack () {
         if (data.length) return data;
         const getDB = localStorage.getItem(key);
         data = JSON.parse(getDB) || [];
+        if (data.length) data = data.filter(Boolean);
         count = (data.length) ? data.length : 0;
         console.log(data)
         return data;
@@ -63,7 +65,7 @@ function Stack () {
     };
 
     updateData = (id, val) => {
-        if (typeof val === 'string') data[id].item = val;
+        if (typeof val === 'string') data[id].task = val;
         if (typeof val === 'boolean') data[id].completed = !val;
         setData()
     };
@@ -82,8 +84,8 @@ function Stack () {
     return {
         push,
         pop,
-        swap,
         print,
+        swap,
         size,
         peek,
         isEmpty,
@@ -118,7 +120,7 @@ function appendDOM (elm,idx) {
                 ></label>
             </div>
             <p class="task-title ${checked}" contenteditable>
-                <span>${ elm.item }</span>
+                <span>${ elm.task }</span>
             </p>
             <div class="task-opts">
                 <button class="edit-btn">✎</button>
@@ -147,17 +149,16 @@ function renderData (data) {
 $todoForm.addEventListener('submit', (e) => {
     e.preventDefault()
     
-    $taskInp.value.trim()
-    const task = $taskInp.value.trim();
-    if (task === "") return;
+    const input = $taskInp.value.trim();
+    if (input === "") return;
     
     const data = {
         id: TodoDB.serial(),
-        item: task,
+        task: input,
         completed: false
     }
 
-    console.log(data)
+    // console.log(data)
     TodoDB.push(data)
     $todoForm.reset()
     renderData(data)
@@ -203,4 +204,14 @@ $todoList.addEventListener('click', (e) => {
         deleteTask(e)
         return;
     }
+})
+
+/*  */
+
+$deleteDS.addEventListener('click', (e) => {
+    if (!($todoList.children.length)) return;
+    const [id,data] = TodoDB.dequeue();
+    // console.log(id,data)
+    const card = $todoList.children[id];
+    card.parentElement.removeChild(card)
 })
