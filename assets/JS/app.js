@@ -56,7 +56,7 @@ function Stack () {
         data = JSON.parse(getDB) || [];
         if (data.length) data = data.filter(Boolean);
         count = (data.length) ? data.length : 0;
-        console.log(data)
+        // console.log(data)
         return data;
     };
 
