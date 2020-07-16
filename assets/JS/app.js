@@ -211,7 +211,8 @@ $todoList.addEventListener('click', (e) => {
 
 $deleteDS.addEventListener('click', (e) => {
     if (!($todoList.children.length)) return;
-    const [id,data] = TodoDB.dequeue();
+    if (TodoDB.peek() === null) return;
+    const [id,data] = TodoDB.pop();
     // console.log(id,data)
     const card = $todoList.children[id];
     card.parentElement.removeChild(card)
