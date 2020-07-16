@@ -2,6 +2,7 @@ const $todoForm = document.forms["todo_form"];
 const $taskInp = document.forms["todo_form"].task_inp;
 const $submitBtn = document.forms["todo_form"].submit_btn;
 const $todoList = document.querySelector('.todo-list');
+const $deleteDS = document.querySelector('.delete-ds');
 
 const empty = (elm) => elm.innerHTML = "";
 
