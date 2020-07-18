@@ -104,7 +104,7 @@ function appendDOM (elm,idx) {
     const completed = (elm.completed) ? 'checked' : '';
     
     $todoList.insertAdjacentHTML(
-        'beforeend',
+        'afterbegin',
         `
         <div class="task-card" data-id="${ idx }">
             <div class="task-check">
